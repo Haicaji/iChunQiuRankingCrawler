@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
 import json
+import os
 
 from Browser import Browser
 
@@ -26,7 +27,7 @@ def main():
 
     all_rank = []
     for now_page_num in range(page_num, 1, -1):
-    # for now_page_num in range(3, 1, -1):
+        # for now_page_num in range(3, 1, -1):
         input_page_num = driver.find_element(By.XPATH,
                                              '/html/body/div[1]/div/div[2]/div[2]/div[3]/span[2]/div/div/input')
 
@@ -54,6 +55,13 @@ def main():
 
     all_rank = [json.loads(i)['data']['lists'] for i in all_rank]
     all_rank = [i for j in all_rank for i in j]
+
+    # 判断了是否存在'all_rank.json文件
+    if os.path.exists('all_rank.json'):
+        if os.path.exists('all_rank_old.json'):
+            os.rename('all_rank_old.json', f'all_rank_old_{time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())}.json')
+        # 重命名'all_rank.json文件
+        os.rename('all_rank.json', 'all_rank_old.json')
 
     # 把all_rank写入json文件
     with open('all_rank.json', 'w') as f:
